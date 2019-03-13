@@ -17,7 +17,6 @@ class FfmpegVmaf < Formula
   option "with-libssh", "Enable SFTP protocol via libssh"
   option "with-libvidstab", "Enable vid.stab support for video stabilization"
   option "with-openh264", "Enable OpenH264 library"
-  option "without-openssl", "Enable SSL support"
   option "without-webp", "Enable using libwebp to encode WEBP images"
   option "with-zeromq", "Enable using libzeromq to receive commands sent through a libzeromq client"
   option "with-zimg", "Enable z.lib zimg library"
@@ -64,7 +63,6 @@ class FfmpegVmaf < Formula
   depends_on "libvidstab" => :optional
   depends_on "libvmaf" => :recommended
   depends_on "openh264" => :optional
-  depends_on "openssl" => :recommended
   depends_on "srt" => :recommended
   depends_on "two-lame" => :optional
   depends_on "wavpack" => :optional
@@ -134,12 +132,11 @@ class FfmpegVmaf < Formula
     args << "--enable-libzimg" if build.with? "zimg"
     args << "--enable-libzmq" if build.with? "zeromq"
     args << "--enable-opencl" if MacOS.version > :lion
-    args << "--enable-openssl" if !(build.without? "openssl")
     args << "--enable-videotoolbox" if MacOS.version >= :mountain_lion
 
     # These librares are GPL-incompatible, and require ffmpeg be built with
     # the "--enable-nonfree" flag, which produces unredistributable libraries
-    args << "--enable-nonfree" if build.with?("fdk-aac") || build.with?("openssl")
+    args << "--enable-nonfree" if build.with?("fdk-aac")
 
     system "./configure", *args
     system "make", "install"
